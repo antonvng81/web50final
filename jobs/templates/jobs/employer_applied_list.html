@@ -1,0 +1,135 @@
+{% extends "jobs/layout.html" %}
+
+{% block body %}
+
+<br>
+<div class="container">
+    {% if message %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    {% if not stop_edit %}
+
+    <div id="jobs-pagination" class="jumbotron jumbotron-fluid">
+        <h1 class="display-4 "><i class="bi-briefcase"></i> Applicants</h1>
+        <p class="lead ">List of applicants. {{count}} total.</p>
+        <hr>
+
+        <div class="pt-2 pb-2">
+            <form id="search_form" action="{% url 'employer_applied_list_init' job_id %}" method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" class="form-control" id="search_cv" name="search_cv" placeholder="CV Search"
+                        value="{{search_cv}}">
+                    <select class="form-control" id="search_state" name="search_state" form="search_form">
+                        <option value="All" {% if search_state == "All" %} selected="selected" {% endif %}>All</option>
+                        <option value="Not Viewed" {% if search_state == "Not Viewed" %} selected="selected" {% endif %}>
+                            Not Viewed</option>
+                        <option value="Viewed" {% if search_state == "Viewed" %} selected="selected" {% endif %}>Viewed
+                        </option>
+                        <option value="Rejected" {% if search_state == "Rejected" %} selected="selected" {% endif %}>
+                            Rejected</option>
+                        <option value="Continues" {% if search_state == "Continues" %} selected="selected" {% endif %}>
+                            Continues</option>
+                        <option value="Selected" {% if search_state == "Selected" %} selected="selected" {% endif %}>
+                            Selected</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% for application in page %}
+        <div class="pt-2 pb-2">
+            <div class="card border-0">
+                <div class="card-body jobs-card">
+
+                    {% if application.state == application.NOT_VIEWED %}
+                    <div class="alert alert-info" role="alert">
+                        CV not viewed yet.
+                    </div>
+                    {% elif application.state == application.VIEWED %}
+                    <div class="alert alert-info" role="alert">
+                        CV has been viewed.
+                    </div>
+                    {% elif application.state == application.REJECTED %}
+                    <div class="alert alert-dark" role="alert">
+                        CV has been rejected.
+                    </div>
+                    {% elif application.state == application.SELECTED %}
+                    <div class="alert alert-success" role="alert">
+                        CV is the final selected.
+                    </div>
+                    {% elif application.state == application.CONTINUES %}
+                    <div class="alert alert-success" role="alert">
+                        CV has been selected to continue.
+                    </div>
+                    {% endif %}
+
+                    <h4 class="card-title">{{application.cv.first_name}} {{application.cv.last_name}}</h4>
+                    <p class="card-text">{{application.cv.description|slice:"0:64"}}...<br>
+                        {{application.letter|slice:"0:64"}}...<br>
+                        {{application.date}}</p>
+                    <a href="{% url 'employer_edit_application' application.id %}" class="btn btn-primary"><i
+                            class="bi-pencil"></i> Edit</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="pt-2 pb-2">
+            <nav aria-label="Job view navigation">
+                <ul class="pagination ">
+                    {% if page.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="{% url 'employer_applied_list' job_id page.previous_page_number %}">Previous</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="">Previous</a>
+                    </li>
+                    {% endif %}
+                    {% if page.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="{% url 'employer_applied_list' job_id page.previous_page_number %}">{{page.previous_page_number }}</a>
+                    </li>
+                    {% endif %}
+                    <li class="page-item active ">
+                        <a class="page-link" href="{% url 'employer_applied_list' job_id page.number %}">
+                            {{page.number}}
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    {% if page.has_next %}
+                    <li class="page-item ">
+                        <a class="page-link" href="{% url 'employer_applied_list' job_id page.next_page_number %}">
+                            {{page.next_page_number }}</a>
+                    </li>
+                    {% endif %}
+                    {% if page.has_next %}
+                    <li class="page-item ">
+                        <a class="page-link"
+                            href="{% url 'employer_applied_list' job_id page.next_page_number %}">Next</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled ">
+                        <a class="page-link" href="">Next</a>
+                    </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    {% endif %}
+</div>
+{% endblock %}

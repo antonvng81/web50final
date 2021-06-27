@@ -1,0 +1,156 @@
+{% extends "jobs/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<br>
+<div class="container">
+    {% if message %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    {% if not stop_edit %}
+    <div class="jumbotron jumbotron-fluid">
+        <h1 class="display-4 "><i class="bi-person"></i> Edit CV</h1>
+        <p class="lead ">Edit CV information.</p>
+        <hr>
+
+        <ul class="nav nav-pills jobs-nav" id="cv-tab">
+            <li class="nav-item">
+                <a class="nav-link active" id="cv-tab-1" data-panel="cv-panel-1" href="#">CV</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cv-tab-2" data-panel="cv-panel-2" href="#">Education</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cv-tab-3" data-panel="cv-panel-3" href="#">Experience</a>
+            </li>
+        </ul>
+
+        <div class="p-0 m-0" id="cv-tab-content">
+            <div id="cv-panel-1">
+                <br>
+                <form action="{% url 'applicant_edit_cv' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input class="form-control" autofocus type="text" id="first_name" name="first_name"
+                            placeholder="First Name" value="{{cv.first_name}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input class="form-control" type="text" id="last_name" name="last_name" placeholder="Last Name"
+                            value="{{cv.last_name}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input class="form-control" type="email" id="email" name="email" placeholder="Email Address"
+                            value="{{cv.email}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input class="form-control" type="tel" id="phone" name="phone" placeholder="Phone Number"
+                            value="{{cv.phone}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input class="form-control" type="text" id="country" name="country" placeholder="Country"
+                            value="{{cv.country}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input class="form-control" type="text" id="city" name="city" placeholder="City"
+                            value="{{cv.city}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input class="form-control" type="text" id="address" name="address" placeholder="Address"
+                            value="{{cv.address}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="postal">Postal Address</label>
+                        <input class="form-control" type="number" id="postal" name="postal" placeholder="Postal Address"
+                            value="{{cv.postal}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" placeholder="Description"
+                            style="height: 20vh;">{{cv.description}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="text">CV Text</label>
+                        <textarea class="form-control" id="text" name="text" placeholder="CV Text"
+                            style="height: 20vh;">{{cv.text}}</textarea>
+                    </div>
+                    <button class="btn btn-primary" type="submit"><i class="bi-save"></i> Save</button>
+                </form>
+            </div>
+
+            <div id="cv-panel-2">
+                <br>
+                <form id="ed-form" action="{% url 'applicant_create_education_api' %}" method="POST">
+                    <div class="form-group">
+                        <label for="ed-title">Title</label>
+                        <textarea class="form-control" id="ed-title" name="ed-title" placeholder="Title"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ed-center">Center</label>
+                        <textarea class="form-control" id="ed-center" name="ed-center" placeholder="Center"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ed-start">Start Date</label>
+                        <input class="form-control" type="date" id="ed-start" name="ed-start" placeholder="Start Date">
+                    </div>
+                    <div class="form-group">
+                        <label for="ed-end">End Date</label>
+                        <input class="form-control" type="date" id="ed-end" name="ed-end" placeholder="End Date">
+                    </div>
+                    <button class="btn btn-primary" type="submit"><i class="bi-book"></i> Add Education</button>
+                </form>
+                <br>
+                <label for="ed-list">Education List</label>
+                <div class="jobs-description" id="ed-list">
+                </div>
+            </div>
+
+            <div id="cv-panel-3">
+                <br>
+                <form id="ex-form" action="{% url 'applicant_create_experience_api' %}" method="POST">
+                    <div class="form-group">
+                        <label for="ex-title">Title</label>
+                        <textarea class="form-control" id="ex-title" name="ex-title" placeholder="Title"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ex-description">Description</label>
+                        <textarea class="form-control" id="ex-description" name="ex-description" style="height: 20vh;"
+                            placeholder="Description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ex-start">Start Date</label>
+                        <input class="form-control" type="date" id="ex-start" name="ex-start" placeholder="Start Date">
+                    </div>
+                    <div class="form-group">
+                        <label for="ex-end">End Date</label>
+                        <input class="form-control" type="date" id="ex-end" name="ex-end" placeholder="End Date">
+                    </div>
+                    <button class="btn btn-primary" type="submit"><i class="bi-tools"></i> Add Experience</button>
+
+                </form>
+                <br>
+                <label for="ex-list">Experience List</label>
+                <div class="jobs-description" id="ex-list">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'jobs/education.js' %}"></script>
+<script src="{% static 'jobs/experience.js' %}"></script>
+<script src="{% static 'jobs/tabs.js' %}"></script>
+
+{% endblock %}

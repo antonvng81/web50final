@@ -1,0 +1,111 @@
+{% extends "jobs/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<br>
+<div class="container">
+    {% if message %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+
+
+
+    {% if not stop_edit %}
+    <div class="jumbotron jumbotron-fluid">
+        <h1 class="display-4 "><i class="bi-house"></i> {{request.user.username}}</h1>
+        <hr>
+
+        <ul class="nav nav-pills jobs-nav" id="applicant-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="applicant-tab-0" data-panel="applicant-page-0" href="#">User</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="applicant-tab-1" data-panel="applicant-page-1" href="#">CV</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="applicant-tab-2" data-panel="applicant-page-2" href="#">Education</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="applicant-tab-3" data-panel="applicant-page-3" href="#">Experience</a>
+            </li>
+        </ul>
+
+        <div class="tab-content p-0 m-0" id="applicant-tab-content">
+
+            <div id="applicant-page-0">
+                <br>
+                <div class="jobs-description">
+                    <dl class="row" id="data">
+                        <dt class="col-sm-3">User Name</dt>
+                        <dd class="col-sm-9">{{request.user.username}}</dd>
+                        <dt class="col-sm-3">User Email</dt>
+                        <dd class="col-sm-9">{{request.user.email}}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div id="applicant-page-1">
+                {% if cv %}
+                <br>
+                {% include 'jobs/applicant_cv_sub.html' %}
+                {% endif %}
+            </div>
+
+            <div id="applicant-page-2">
+                {% if educations is not None%}
+                <br>
+                <div class="jobs-description" id="ed-description">
+                    {% for education in educations %}
+                    <dl class='row'>
+                        <dt class='col-sm-3'>Title</dt>
+                        <dd class='col-sm-9'>{{education.title}}</dd>
+                        <dt class='col-sm-3'>Center</dt>
+                        <dd class='col-sm-9'>{{education.center}}</dd>
+                        <dt class='col-sm-3'>Start Date</dt>
+                        <dd class='col-sm-9'>{{education.start}}</dd>
+                        <dt class='col-sm-3'>End Date</dt>
+                        <dd class='col-sm-9'>{{education.end}}</dd>
+                    </dl>
+                    {%if not forloop.last %}
+                    <hr>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div id="applicant-page-3">
+                {% if experiences is not None %}
+                <br>
+                <div class="jobs-description" id="ex-list">
+                    {% for experience in experiences %}
+                    <dl class='row'>
+                        <dt class='col-sm-3'>Title</dt>
+                        <dd class='col-sm-9'>{{experience.title}}</dd>
+                        <dt class='col-sm-3'>Description</dt>
+                        <dd class='col-sm-9'>{{experience.description}}</dd>
+                        <dt class='col-sm-3'>Start Date</dt>
+                        <dd class='col-sm-9'>{{experience.start}}</dd>
+                        <dt class='col-sm-3'>End Date</dt>
+                        <dd class='col-sm-9'>{{experience.end}}</dd>
+                    </dl>
+                    {%if not forloop.last %}
+                    <hr>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'jobs/tabs.js' %}"></script>
+{% endblock %}

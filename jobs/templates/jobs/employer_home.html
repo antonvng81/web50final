@@ -1,0 +1,73 @@
+{% extends "jobs/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<br>
+<div class="container">
+    {% if message %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    {% if not stop_edit %}
+    <div class="jumbotron jumbotron-fluid">
+        <h1 class="display-4 "><i class="bi-house"></i> {{request.user.username}}</h1>
+        <hr>
+
+        <ul class="nav nav-pills jobs-nav" id="employer-tab">
+            <li class="nav-item">
+                <a class="nav-link active" id="employer-tab-1" data-panel="employer-page-1" href="#">User</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " id="employer-tab-2" data-panel="employer-page-2" href="#">Company</a>
+            </li>
+        </ul>
+
+        <div class="p-0 m-0" id="employer-tab-content">
+            <div id="employer-page-1">
+                <br>
+                <div class="jobs-description" id="jobs-employer">
+                    <dl class="row">
+                        <dt class="col-sm-3">User Name</dt>
+                        <dd class="col-sm-9">{{request.user.username}}</dd>
+                        <dt class="col-sm-3">User Email</dt>
+                        <dd class="col-sm-9">{{request.user.email}}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div id="employer-page-2">
+                <br>
+                {% if company %}
+                <div class="jobs-description">
+                    <dl class="row">
+                        <dt class="col-sm-3">Company Name</dt>
+                        <dd class="col-sm-9">{{company.name}}</dd>
+                        <dt class="col-sm-3">Email Address</dt>
+                        <dd class="col-sm-9">{{company.email}}</dd>
+                        <dt class="col-sm-3">Phone Number</dt>
+                        <dd class="col-sm-9">{{company.phone}}</dd>
+                        <dt class="col-sm-3">Country</dt>
+                        <dd class="col-sm-9">{{company.country}}</dd>
+                        <dt class="col-sm-3">City</dt>
+                        <dd class="col-sm-9">{{company.city}}</dd>
+                        <dt class="col-sm-3">Address</dt>
+                        <dd class="col-sm-9">{{company.address}}</dd>
+                        <dt class="col-sm-3">Postal Address</dt>
+                        <dd class="col-sm-9">{{company.postal}}</dd>
+                        <dt class="col-sm-3">Description</dt>
+                        <dd class="col-sm-9">
+                            <pre>{{company.description}}</pre>
+                        </dd>
+                    </dl>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block script %}
+<script src="{% static 'jobs/tabs.js' %}"></script>
+{% endblock %}

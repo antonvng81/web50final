@@ -1,0 +1,60 @@
+{% extends "jobs/layout.html" %}
+
+{% block body %}
+
+<br>
+<div class="container">
+    {% if message %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    {% if not stop_edit %}
+    <div class="jumbotron jumbotron-fluid ">
+        <h1 class="display-4 "><i class="bi-pencil"></i> Edit Job</h1>
+        <p class="lead "> Insert title, location, salary and description.</p>
+        <hr>
+        <form action="{% url 'employer_edit_job' job.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input class="form-control" autofocus type="text" name="title" placeholder="Title"
+                    value="{{job.title}}">
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input class="form-control" type="text" name="location" placeholder="Location">
+            </div>
+            <div class="form-group">
+                <label for="salary">Salary</label>
+                <input class="form-control" type="number" name="salary" placeholder="Salary" min=0>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" name="description" placeholder="Description"
+                    style="height: 30vh;">{{job.description}}</textarea>
+            </div>
+            <button class="btn btn-primary" id="save" name="save" type="submit"><i class="bi-save"></i> Save</button>
+        </form>
+        <hr>
+        <p class="lead "> Edit applicants state.</p>
+
+        <form action="{% url 'employer_edit_job' job.id %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary" id="applications" name="applications" type="submit"><i
+                    class="bi-briefcase"></i> Aplicants</button>
+        </form>
+        <hr>
+        <p class="lead "> Delete this job. </p>
+
+        <form action="{% url 'employer_edit_job' job.id %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary" id="delete" name="delete" type="submit"><i class="bi-trash"></i>
+                Delete</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

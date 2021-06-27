@@ -1,0 +1,69 @@
+{% extends "jobs/layout.html" %}
+
+{% block body %}
+    <br>
+    <div class="container">
+        {% if message %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
+
+
+
+        {% if not stop_edit %}
+        <div class="jumbotron jumbotron-fluid">
+            <h1 class="display-4 "><i class="bi-check-square"></i> Apply Job</h1>
+            <p class="lead "> Apply for a job, write a letter. {{count}} total applications.</p>
+            <hr>
+
+            {% if already_applied is not None %}
+            <div class="alert alert-success" role="alert">
+                CV already applied to this job.
+            </div>
+            {% endif %}
+
+            <label for="description">Description</label>                    
+            <div class="jobs-description" id="description">                        
+                <dl class="row">
+                    <dt class="col-sm-3">Title</dt>
+                    <dd class="col-sm-9">{{job.title}}</dd>
+                    <dt class="col-sm-3">Company</dt>
+                    <dd class="col-sm-9">{{job.company.name}}</dd>
+                    <dt class="col-sm-3">Location</dt>
+                    <dd class="col-sm-9">{{job.location}}</dd>                        
+                    <dt class="col-sm-3">Salary</dt>
+                    <dd class="col-sm-9">{{job.salary}}</dd>                    
+                    <dt class="col-sm-3">Date</dt>
+                    <dd class="col-sm-9">{{job.date}}</dd>                                        
+                    <dt class="col-sm-3">Description</dt>
+                    <dd class="col-sm-9"><pre>{{job.description}}</pre></dd>                                                                                
+                </dl>                
+            </div>
+            <br>
+            {% if already_applied is not None %}
+            <label for="application">Application</label>                    
+            <div class="jobs-description" id="application">   
+                <dl class="row">
+                    <dt class="col-sm-3">Letter</dt>
+                    <dd class="col-sm-9"><pre>{{already_applied.letter}}</pre></dd>                                                                              
+                    <dt class="col-sm-3">State</dt>
+                    <dd class="col-sm-9">{{already_applied.state}}</dd>
+                </dl>                
+            </div>
+            {% else %}
+            <form action="{% url 'applicant_apply_job' job.id %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="letter">Letter</label>                    
+                    <textarea class="form-control" name="letter" placeholder="Letter" style="height: 20vh;" ></textarea>
+                </div>
+                <button class="btn btn-primary" type="submit"><i class="bi-check-square"></i> Apply</button>
+            </form>        
+            {% endif %}
+
+        </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

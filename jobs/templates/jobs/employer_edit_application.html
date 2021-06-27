@@ -1,0 +1,126 @@
+{% extends "jobs/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<br>
+<div class="container">
+    {% if message %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    {% if not stop_edit %}
+    <div class="jumbotron jumbotron-fluid">
+        <h1 class="display-4 "><i class="bi-check-square"></i> Edit Application</h1>
+        <p class="lead ">Edit state and view CV.</p>
+        <hr>
+        <form id="search_form" action="{% url 'employer_edit_application' application.id%}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="state">Application state</label>
+                <select class="form-control" id="state" name="state" form="search_form">
+
+                    <option value="Not Viewed" {% if state == "Not Viewed" %} selected="selected" {% endif %}>
+                        Not Viewed</option>
+
+                    <option value="Viewed" {% if state == "Viewed" %} selected="selected" {% endif %}>
+                        Viewed</option>
+
+                    <option value="Rejected" {% if state == "Rejected" %} selected="selected" {% endif %}>
+                        Rejected</option>
+
+                    <option value="Continues" {% if state == "Continues" %} selected="selected" {% endif %}>
+                        Continues</option>
+
+                    <option value="Selected" {% if state == "Selected" %} selected="selected" {% endif %}>
+                        Selected</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit"><i class="bi-save"></i> Save</button>
+        </form>
+        <hr>
+        <label for="jobs-letter">Application Letter</label>
+        <div class="jobs-description" id="jobs-letter" style="height: 20vh;">
+            <pre>{{application.letter}}</pre>
+        </div>
+        <hr>
+
+        <ul class="nav nav-pills jobs-nav" id="cv-tab">
+            <li class="nav-item">
+                <a class="nav-link active" id="cv-tab-1" data-panel ="cv-panel-1" href="#">CV</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cv-tab-2" data-panel ="cv-panel-2" href="#">Education</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cv-tab-3" data-panel ="cv-panel-3" href="#">Experience</a>
+            </li>
+        </ul>
+
+        <div class="tab-content p-0 m-0" id="cv-tab-content">
+
+            <div id="cv-panel-1">
+                {% if cv %}
+                <br>
+                {% include 'jobs/applicant_cv_sub.html' %}
+                {% endif %}
+            </div>
+
+            <div id="cv-panel-2">
+                <br>
+                {% if educations is not None%}
+                <div class="jobs-description" id="ed-description">
+                    {% for education in educations %}
+                    <dl class='row'>
+                        <dt class='col-sm-3'>Title</dt>
+                        <dd class='col-sm-9'>{{education.title}}</dd>
+                        <dt class='col-sm-3'>Center</dt>
+                        <dd class='col-sm-9'>{{education.center}}</dd>
+                        <dt class='col-sm-3'>Duration</dt>
+                        <dd class='col-sm-9'>{{education.duration}} years</dd>
+                        <dt class='col-sm-3'>End date</dt>
+                        <dd class='col-sm-9'>{{education.end}}</dd>
+                    </dl>
+                    {%if not forloop.last %}
+                    <hr>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <br>
+                {% endif %}
+            </div>
+
+            <div id="cv-panel-3">
+                <br>
+                {% if experiences is not None%}
+                <div class="jobs-description" id="ex-list">
+                    {% for experience in experiences %}
+                    <dl class='row'>
+                        <dt class='col-sm-3'>Title</dt>
+                        <dd class='col-sm-9'>{{experience.title}}</dd>
+                        <dt class='col-sm-3'>Description</dt>
+                        <dd class='col-sm-9'>{{experience.description}}</dd>
+                        <dt class='col-sm-3'>Start Date</dt>
+                        <dd class='col-sm-9'>{{experience.start}}</dd>
+                        <dt class='col-sm-3'>End Date</dt>
+                        <dd class='col-sm-9'>{{experience.end}}</dd>
+                    </dl>
+                    {%if not forloop.last %}
+                    <hr>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'jobs/tabs.js' %}"></script>
+{% endblock %}

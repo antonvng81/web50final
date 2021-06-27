@@ -1,0 +1,37 @@
+{% extends "jobs/layout.html" %}
+
+{% block body %}
+
+<br>
+<div class="container">
+    {% if message %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+    <div class="jumbotron jumbotron-fluid">
+        <h1 class="display-4 ">Applicant Register</h1>
+        <p class="lead ">Create a new applicant account.</p>
+        <hr>
+        <form action="{% url 'applicant_register' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="email" name="email" placeholder="Email Address">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" name="password" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Register">
+        </form>
+    </div>
+    Already have an account? <a href="{% url 'applicant_access' %}">Log In here.</a>
+</div>
+{% endblock %}
+
+
